@@ -8,6 +8,8 @@ const cartItems = document.querySelector(".cart-items");
 const cartTotal = document.querySelector(".cart-total");
 const cartContent = document.querySelector(".cart-content");
 const productsDOM = document.querySelector(".products-center");
+
+// cart
 let cart = [];
 
 // getting the products
@@ -56,10 +58,16 @@ class UI {
     });
     productsDOM.innerHTML = result;
   }
+  getBagButtons(){
+    const buttons = [...document.querySelectorAll(".bag-btn")];
+    // console.log(buttons);
+  }
 }
 // local storage
 class Storage{
-
+  static saveProducts(products){
+    localStorage.setItem("products", JSON.stringify(products));
+  }
 }
 
 document.addEventListener("DOMContentLoaded", ()=>{
@@ -67,5 +75,10 @@ document.addEventListener("DOMContentLoaded", ()=>{
   const products = new Products();
 
   // get all products
-  products.getProducts().then(products => ui.displayProducts(products));
+  products.getProducts().then(products => {
+    ui.displayProducts(products)
+    Storage.saveProducts(products);
+  }).then(() =>{
+    ui.getBagButtons();
+  });
 });
