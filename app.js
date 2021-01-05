@@ -60,7 +60,24 @@ class UI {
   }
   getBagButtons(){
     const buttons = [...document.querySelectorAll(".bag-btn")];
-    // console.log(buttons);
+    console.log(buttons);
+    buttons.forEach(button => {
+      let id = button.dataset.id;
+      // console.log(id);
+      let inCart = cart.find(item => item.id === id);
+      
+      if(inCart){//when product in the cart
+        button.innerText = "In Cart";
+        button.disabled = true;
+      }else{//when product is not in the cart
+        button.addEventListener('click', (event)=>{
+          // console.log(event);
+          event.target.innerText = "In Cart";
+          event.target.disabled = true;
+          
+        });
+      }
+    });
   }
 }
 // local storage
