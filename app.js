@@ -156,6 +156,16 @@ class UI {
         cartContent.removeChild(removeItem.parentElement.parentElement);
         this.removeItem(id);
       }
+      // increase product quantity chevron arrow
+      else if(event.target.classList.contains('fa-chevron-up')){
+        let addAmount = event.target;
+        let id = addAmount.dataset.id;
+        let tempItem = cart.find(item => item.id === id);
+        tempItem.amount = tempItem.amount + 1;
+        Storage.saveCart(cart);
+        this.setCartValues(cart);
+        addAmount.nextElementSibling.innerHTML = tempItem.amount;
+      }
     });
   }
   clearCart(){
