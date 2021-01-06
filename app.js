@@ -63,7 +63,7 @@ class UI {
   getBagButtons(){
     const buttons = [...document.querySelectorAll(".bag-btn")];
     buttonsDOM = buttons;
-    console.log(buttons);
+    // console.log(buttons);
     buttons.forEach(button => {
       let id = button.dataset.id;
       // console.log(id);
@@ -71,14 +71,14 @@ class UI {
       
       //when product is in the cart
       if(inCart){
-        button.innerHTML = "In Cart";
+        button.innerHTML = "In Bag";
         button.disabled = true;
       }
 
       //when product is not in the cart
       button.addEventListener('click', (event)=>{
         // console.log(event);
-        event.target.innerHTML = "In Cart";
+        event.target.innerHTML = "In Bag";
         event.target.disabled = true;
         // get product from products based on id
         let cartItem = {...Storage.getProduct(id), amount:1};       
@@ -142,6 +142,36 @@ class UI {
     cartOverlay.classList.remove('transparentBcg');
     cartDOM.classList.remove('showCart');
   }
+  cartLogic(){
+    // clear cart button
+    clearCartBtn.addEventListener('click',()=>{
+      this.clearCart();
+    });
+    // cart functionality
+  }
+  clearCart(){
+    // get ids of products in cart
+    let cartItems = cart.map(item=> item.id);
+    cartItems.forEach(id => this.removeItem(id));
+    while(cartContent.children.length>0){
+      cartContent.removeChild(cartContent.children[0]);
+      console.log(cartContent.children);
+    }
+    this.hideCart();
+  }
+  // once a product is completely removed from cart
+  removeItem(id){
+    cart = cart.filter(item => item.id !== id);
+    this.setCartValues(cart);
+    Storage.saveCart(cart);
+    // get id of product button which was added to cart
+    let button = this.getSingleButton(id);
+    button.disabled = false;
+    button.innerHTML = `<i class="fas fa-shopping-cart"></i>add to bag`;
+  }
+  getSingleButton(id){
+    return buttonsDOM.find(button => button.dataset.id === id);
+  }
 }
 // local storage
 class Storage{
@@ -172,5 +202,6 @@ document.addEventListener("DOMContentLoaded", ()=>{
     Storage.saveProducts(products);
   }).then(() =>{
     ui.getBagButtons();
+    ui.cartLogic();
   });
 });
